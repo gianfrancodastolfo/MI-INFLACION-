@@ -1,0 +1,53 @@
+# Actualiza los datos oficiales y, si cambiaron y pasan las validaciones, los publica.
+# Netlify despliega solo al recibir el commit en main.
+name: Actualizar datos oficiales
+
+on:
+  schedule:
+    # INDEC publica el IPC a las 16:00 (hora argentina). Se corre 16:30 ART y 9:00 ART, todos los días.
+    - cron: '30 19 * * *'
+    - cron: '0 12 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Descargar y validar (INDEC; si falla, API de Series de Tiempo)
+        run: npm run data:update
+      - name: Datos complementarios (CABA, provincias, salarios, canasta, SMVM, UVA, ICL)
+        # Si falla, se conservan los archivos anteriores y el IPC igual se publica.
+        continue-on-error: true
+        run: npm run data:externos
+      - name: Precios promedio de INDEC (GBA y regiones)
+        # Corrige los errores conocidos de la API y controla contra los informes; si falla, queda el archivo anterior.
+        continue-on-error: true
+        run: npm run data:precios
+      - name: Tests con los datos nuevos
+        run: npm test
+      - name: Publicar si hubo cambios
+        run: |
+          if git diff --quiet -- src/data/; then
+            echo "Sin datos nuevos."
+            exit 0
+          fi
+          LAST=$(node -e "console.log(require('./src/data/ipc.json').meta.last)")
+          git config user.name "mi-inflacion-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add src/data/*.json
+          git commit -m "datos: actualización automática (IPC hasta ${LAST})"
+          git push

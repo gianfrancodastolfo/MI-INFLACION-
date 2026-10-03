@@ -1,0 +1,11 @@
+{
+  "name": "Mi Inflación",
+  "short_name": "Mi Inflación",
+  "description": "Sueldo, inflación oficial (INDEC) e inflación personal en Argentina.",
+  "lang": "es-AR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f5f7",
+  "theme_color": "#121a21",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

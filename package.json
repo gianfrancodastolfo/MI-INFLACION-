@@ -1,0 +1,36 @@
+{
+  "name": "mi-inflacion",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Mi Inflación: sueldo, inflación oficial (INDEC) e inflación personal en Argentina.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:preview": "vite build --mode singlefile",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "data:update": "node scripts/etl/update-data.mjs",
+    "data:validate": "node scripts/etl/update-data.mjs --validate-only",
+    "data:externos": "node scripts/etl/update-externos.mjs",
+    "data:externos:offline": "node scripts/etl/update-externos.mjs --from-dir=data-raw/api-snapshot-2026-10 --icl-dir=data-raw/bcra-api",
+    "data:precios": "node scripts/etl/update-precios.mjs",
+    "data:precios:offline": "node scripts/etl/update-precios.mjs --from-dir=data-raw/api-snapshot-2026-10",
+    "data:all": "npm run data:update && npm run data:externos && npm run data:precios"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vite-plugin-singlefile": "^2.3.3",
+    "vitest": "^2.1.9"
+  }
+}
