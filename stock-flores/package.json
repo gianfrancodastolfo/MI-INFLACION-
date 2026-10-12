@@ -1,0 +1,31 @@
+{
+  "name": "stock-flores",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Stock interno de flores comestibles y hojas: ventas, reservas e ingresos por bandeja.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:gas": "node scripts/build-gas.mjs",
+    "check:gas": "node scripts/build-gas.mjs --check",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/google-apps-script": "^2.0.13",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.9"
+  }
+}
